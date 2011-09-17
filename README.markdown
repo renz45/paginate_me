@@ -51,7 +51,7 @@ end</pre>
 * link_to_next(options={}) - label for next button, increments page by +1
 * link_to_previous(options={}) - label for previous button subtracts pages by -1
 * link_to_last(options={}) - goes to the last page available, based on total count
-  * **options**
+  <p> **options** </p>
     * :name - name of link
     * :class - classes for link pass an array for multiple classes
     * :title - title for link
@@ -59,3 +59,5 @@ end</pre>
 <h2>Information Output</h2>
 * page_out_of_total - formats pagination info '1 of 10' standard rails 'content_tag' options apply
 
+<h2>Additional Information</h2>
+<p>If multiple pagination is needed on one page, for example at the top and bottom of the list, the block of paginate links only needs to be passed to the first 'paginate_for' The additional 'paginate_for' will use the same block, or new blocks can be passed if a different look is required</p>
