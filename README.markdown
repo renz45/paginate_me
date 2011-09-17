@@ -1,31 +1,35 @@
-<h1>Paginate Me 0.0.4</h1>
+# Paginate Me 0.0.4
 
 **Adam Rensel's Code**
 
-<p>Paginate me is a Ruby Gem that adds simple pagination functionality to views.</p>
+Paginate me is a Ruby Gem that adds simple pagination functionality to views.
 
 
 
-<h2>Usage:</h2>
-<p>users_controller.rb</p>
+## Usage:
+### Controller Code (users_controller.rb)
 
-<pre>class UsersController &lt; ApplicationController
+```ruby
+class UsersController &lt; ApplicationController
 	def index
 		@title = "All Users"
 
 	 paginate_me :users
 	end
-end</pre>
+end
+```
 
-<p>index.haml</p>
-
-<pre>= paginate_for :users do |p|
+### View code (index.haml)
+```haml
+= paginate_for :users do |p|
   = p.link_to_first
 	= p.link_to_next
 	= p.page_out_of_total
 	= p.link_to_previous
-	= p.link_to_last</pre>
-<p>Results in: </p>
+	= p.link_to_last
+```
+Results in:
+```html
     <div class="paginate_me users"> 
       <a href="/users/page/10" class="first" title="first">First</a> 
               
@@ -37,32 +41,32 @@ end</pre>
               
       <a href="/users/page/10" class="last" title="last">Last</a> 
     </div>
-
-<h2>Options for paginate_me(item, options ={})</h2>
+```
+## Options for paginate_me(item, options ={})
 * :url - The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)
 * :per_page - results per page, defaults to 10
-* :params_var - variable set in routes that will hold the current page number ex: <code>match "/users/page/:page", :to => "users#index"</code> :page is the :params_var , defaults to :page
+* :params_var - variable set in routes that will hold the current page number ex: ` match "/users/page/:page", :to => "users#index" ` :page is the :params_var , defaults to :page
 
 
-<h2>Options for paginate_for(item, options = {}, &block)</h2>
+## Options for paginate_for(item, options = {}, &block)
 * :class - add classes to div container tag
 * :slug - slug used for url, defaults to 'page', the controller will use the slug in the 'params' variable by default as well.
 
 
-<h2>Paginate Links</h2>
+## Paginate Links
 * link_to_first(options={}) - label for first button, goes to page 1 
 * link_to_next(options={}) - label for next button, increments page by +1
 * link_to_previous(options={}) - label for previous button subtracts pages by -1
 * link_to_last(options={}) - goes to the last page available, based on total count
-  <p> **options** </p>
+   **options**
     * :name - name of link
     * :class - classes for link pass an array for multiple classes
     * :title - title for link
 
-<h2>Information Output</h2>
+## Information Output
 * page_out_of_total - formats pagination info '1 of 10' standard rails 'content_tag' options apply
 
-<h2>Additional Information</h2>
+## Additional Information
 * If multiple pagination is needed on one page, for example at the top and bottom of the list, the block of paginate links only needs to be passed to the first 'paginate_for' The additional 'paginate_for' will use the same block, or new blocks can be passed if a different look is required
-* Make sure you add the correct routes to your routes.rb. For example if your passing in :users and are using a standard resource routing setup, you will need:<code>match "/users/page/:page", :to => "users#index"</code>
+* Make sure you add the correct routes to your routes.rb. For example if your passing in :users and are using a standard resource routing setup, you will need: ` match "/users/page/:page", :to => "users#index" `
 
