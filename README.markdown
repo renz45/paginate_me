@@ -9,22 +9,22 @@
 <h2>Usage:</h2>
 <p>users_controller.rb</p>
 
-`class UsersController < ApplicationController
-	def index
-		@title = "All Users"
+  class UsersController < ApplicationController
+	  def index
+		  @title = "All Users"
 
-		paginate_me :users
-	end
-end`
+		  paginate_me :users
+	  end
+  end
 
 <p>index.haml</p>
 
-`= paginate_for :users do |p|
-	= p.link_to_first
-	= p.link_to_next
-	= p.page_out_of_total
-	= p.link_to_previous
-	= p.link_to_last`
+  = paginate_for :users do |p|
+	  = p.link_to_first
+	  = p.link_to_next
+	  = p.page_out_of_total
+	  = p.link_to_previous
+	  = p.link_to_last
 
 <h2>Options for paginate_me(item, options ={})</h2>
 * :url - The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)
@@ -39,10 +39,10 @@ end`
 * link_to_next(options={}) - label for next button, increments page by +1
 * link_to_previous(options={}) - label for previous button subtracts pages by -1
 * link_to_last(options={}) - goes to the last page available, based on total count
-** options
-*** :name - name of link
-*** :class - classes for link pass an array for multiple classes
-*** :title - title for link
+  * options
+    * :name - name of link
+    * :class - classes for link pass an array for multiple classes
+    * :title - title for link
 
 <h2>Information Output</h2>
 * page_out_of_total - formats pagination info '1 of 10' standard rails 'content_tag' options apply
