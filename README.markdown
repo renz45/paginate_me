@@ -13,7 +13,7 @@
 	def index
 		@title = "All Users"
 
-	 **paginate_me :users**
+	 paginate_me :users
 	end
 end</pre>
 
