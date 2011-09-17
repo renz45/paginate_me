@@ -6,7 +6,7 @@
 
 
 
-<h2>Usage:<h2>
+<h2>Usage:</h2>
 <p>users_controller.rb</p>
 
 `class UsersController < ApplicationController
@@ -26,7 +26,7 @@ end`
 	= p.link_to_previous
 	= p.link_to_last`
 
-<h2>Options for paginate_me(item, options ={})<h2>
+<h2>Options for paginate_me(item, options ={})</h2>
 * :url - The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)
 * :per_page - results per page, defaults to 10
 
