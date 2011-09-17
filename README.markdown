@@ -28,7 +28,7 @@ end
 	= p.link_to_previous
 	= p.link_to_last
 ```
-Results in:
+HTML output
 ```html
     <div class="paginate_me users"> 
       <a href="/users/page/10" class="first" title="first">First</a> 
