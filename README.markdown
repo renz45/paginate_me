@@ -60,4 +60,6 @@ end</pre>
 * page_out_of_total - formats pagination info '1 of 10' standard rails 'content_tag' options apply
 
 <h2>Additional Information</h2>
-<p>If multiple pagination is needed on one page, for example at the top and bottom of the list, the block of paginate links only needs to be passed to the first 'paginate_for' The additional 'paginate_for' will use the same block, or new blocks can be passed if a different look is required</p>
+* If multiple pagination is needed on one page, for example at the top and bottom of the list, the block of paginate links only needs to be passed to the first 'paginate_for' The additional 'paginate_for' will use the same block, or new blocks can be passed if a different look is required
+* Make sure you add the correct routes to your routes.rb. For example if your passing in :users and are using a standard resource routing setup, you will need:<code>match "/users/page/:page", :to => "users#index"</code>
+
