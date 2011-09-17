@@ -26,17 +26,17 @@ end</pre>
 	= p.link_to_previous
 	= p.link_to_last</pre>
 <p>Results in: </p>
-<pre><div class="paginate_me users"> 
-            <a href="/users/page/10" class="first" title="first">First</a> 
-          
-            <a href="/users/page/10" class="next" title="next">Next</a> 
-          
-            <span>2 of 10</span> 
-          
-            <a href="/users/page/10" class="previous" title="previous">Previous</a> 
-          
-            <a href="/users/page/10" class="last" title="last">Last</a> 
-          </div> </pre>
+  `<div class="paginate_me users"> 
+    <a href="/users/page/10" class="first" title="first">First</a> 
+            
+    <a href="/users/page/10" class="next" title="next">Next</a> 
+            
+    <span>2 of 10</span> 
+            
+    <a href="/users/page/10" class="previous" title="previous">Previous</a> 
+            
+    <a href="/users/page/10" class="last" title="last">Last</a> 
+  </div>`
 
 <h2>Options for paginate_me(item, options ={})</h2>
 * :url - The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)
