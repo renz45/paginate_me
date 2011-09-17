@@ -41,7 +41,7 @@ end</pre>
 <h2>Options for paginate_me(item, options ={})</h2>
 * :url - The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)
 * :per_page - results per page, defaults to 10
-* :params_var - variable set in routes that will hold the current page number ex: <code>match "/users/page/:page", :to => "users#index"</code> :page is the :params_var
+* :params_var - variable set in routes that will hold the current page number ex: <code>match "/users/page/:page", :to => "users#index"</code> :page is the :params_var , defaults to :page
 
 
 <h2>Options for paginate_for(item, options = {}, &block)</h2>
