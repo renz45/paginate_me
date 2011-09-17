@@ -1,6 +1,6 @@
 <h1>Paginate Me</h1>
 
-<bold>Adam Rensel's Code</bold>
+*Adam Rensel's Code*
 
 <p>Paginate me is a Ruby Gem that adds simple pagination functionality to views.</p>
 
@@ -13,7 +13,7 @@
 	def index
 		@title = "All Users"
 
-	 paginate_me :users
+	 *paginate_me :users*
 	end
 end</pre>
 
@@ -39,7 +39,7 @@ end</pre>
 * link_to_next(options={}) - label for next button, increments page by +1
 * link_to_previous(options={}) - label for previous button subtracts pages by -1
 * link_to_last(options={}) - goes to the last page available, based on total count
-  * <bold>options</bold>
+  * *options*
     * :name - name of link
     * :class - classes for link pass an array for multiple classes
     * :title - title for link
