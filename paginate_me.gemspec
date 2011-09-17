@@ -7,10 +7,9 @@ Gem::Specification.new do |s|
   s.version     = PaginateMe::VERSION
   s.authors     = ["Adam Rensel"]
   s.email       = ["adamrensel@gmail.com"]
-  s.homepage    = "https://github.com/renz45/paginate_me"
-  s.summary     = %q{Pagination gem for rails 3.1}
-  s.description = %q{Pagination gem which works similar to the form_for rails 
-                    helper, see the README for more information}
+  s.homepage    = ""
+  s.summary     = %q{Something}
+  s.description = %q{Its a thing}
 
   s.rubyforge_project = "paginate_me"
 

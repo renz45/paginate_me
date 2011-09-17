@@ -4,12 +4,13 @@ module PaginateMe
         model_name = item.to_s
         model = model_name.singularize.camelize.constantize
 
-        @options = {}
-        @options[:base_url] = options[:url] || method("#{model_name}_path").call
-        @options[:per_page] = options[:per_page] || 10
+        @options = options
+        @options[:params_var] ||= :page 
+        @options[:base_url] ||= method("#{model_name}_path").call
+        @options[:per_page] ||= 10
         @options[:page_total] = (model.count / @options[:per_page].to_f).ceil
-        @options[:current_page] = self.params['page'].to_i || options[:page].to_i || 1
-        
+        @options[:current_page] = self.params[@options[:params_var]].to_i || 1
+  
         current_page = @options[:current_page]
         page_total = @options[:page_total]
 
@@ -50,43 +51,38 @@ module PaginateMe
 
       def initialize(options)
 
-        @slug = options[:slug] || "page"
-
+        @slug = options[:slug] ||= "page"
         @base_url = options[:base_url]
         @per_page = options[:per_page]
         @page_total = options[:page_total]
         @current_page = options[:current_page]
 
         @next_page = (@current_page >= @page_total ? @current_page : @current_page + 1).to_s
-        @prev_page = (@current_page <= 1 ? @current_page : @current_page - 1).to_s     
+        @prev_page = (@current_page <= 1 ? @current_page : @current_page - 1).to_s   
       end
 
       def link_to_next(options = {})
         options[:name] ||= "Next"
 
-        add_to_template paginate_link_to @page_total, options if 
-                          @current_page < @page_total
+        add_to_template paginate_link_to @next_page, options if @current_page < @page_total
       end
 
       def link_to_previous(options = {})
         options[:name] ||= "Previous"
 
-        add_to_template paginate_link_to @page_total, options if 
-                          @current_page > 1
+        add_to_template paginate_link_to @prev_page, options if @current_page > 1
       end
 
       def link_to_first(options = {})
         options[:name] ||= "First"
 
-        add_to_template paginate_link_to @page_total, options if 
-                          @current_page < @page_total
+        add_to_template paginate_link_to 1, options if @current_page < @page_total
       end
 
       def link_to_last(options = {})
         options[:name] ||= "Last"
         
-        add_to_template paginate_link_to @page_total, options if 
-                          @current_page > 1
+        add_to_template paginate_link_to @page_total, options if @current_page > 1
       end
 
       def page_out_of_total(options = {})

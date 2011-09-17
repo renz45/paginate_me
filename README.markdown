@@ -41,10 +41,13 @@ end</pre>
 <h2>Options for paginate_me(item, options ={})</h2>
 * :url - The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)
 * :per_page - results per page, defaults to 10
+* :params_var - variable set in routes that will hold the current page number ex: <code>match "/users/page/:page", :to => "users#index"</code> :page is the :params_var
+
 
 <h2>Options for paginate_for(item, options = {}, &block)</h2>
 * :class - add classes to div container tag
-* :slug - slug used for url, defaults to 'page'
+* :slug - slug used for url, defaults to 'page', the controller will use the slug in the 'params' variable by default as well.
+
 
 <h2>Paginate Links</h2>
 * link_to_first(options={}) - label for first button, goes to page 1 
