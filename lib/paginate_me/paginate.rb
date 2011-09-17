@@ -9,7 +9,7 @@ module PaginateMe
         @options[:per_page] = options[:per_page] || 10
         @options[:page_total] = (model.count / @options[:per_page].to_f).ceil
         @options[:current_page] = self.params['page'].to_i || options[:page].to_i || 1
-
+        
         current_page = @options[:current_page]
         page_total = @options[:page_total]
 
@@ -26,15 +26,22 @@ module PaginateMe
 
   module PMView
     def paginate_for(item,options = {},&block)
+
+      @page_block = block || @page_block
+      raise ArgumentError, "Missing Block" if @page_block.nil?
+
       model_name = item.to_s
 
       options = options.merge @options
 
+      paginate_classes = options[:class] || model_name
+      paginate_classes = paginate_classes.join " " if paginate_classes.is_a? Array
+
       paginate_builder = PaginateMeBuilder.new(options)
 
-      content = capture(paginate_builder,&block)
+      content = capture(paginate_builder,&@page_block)
 
-      content_tag(:div,content, :class => "paginate_me #{model_name}")
+      content_tag(:div,content, :class => "paginate_me #{paginate_classes}")
     end
     
   end
@@ -43,12 +50,7 @@ module PaginateMe
 
       def initialize(options)
 
-        @first_label = options[:first_label] || "First"
-
-        @next_label = options[:next_label] || "Next"
-        @previous_label = options[:previous_label] || "Previous"
-
-        @last_label = options[:last_label] || "Last"
+        @slug = options[:slug] || "page"
 
         @base_url = options[:base_url]
         @per_page = options[:per_page]
@@ -59,35 +61,51 @@ module PaginateMe
         @prev_page = (@current_page <= 1 ? @current_page : @current_page - 1).to_s     
       end
 
-      def link_to_next
-        add_to_template link_to(@next_label, @base_url + "/page/#{@next_page}", :class => "next") if 
+      def link_to_next(options = {})
+        options[:name] ||= "Next"
+
+        add_to_template paginate_link_to @page_total, options if 
                           @current_page < @page_total
       end
 
-      def link_to_previous
-        add_to_template link_to(@previous_label, @base_url + "/page/#{@prev_page}" , :class => "previous") if 
+      def link_to_previous(options = {})
+        options[:name] ||= "Previous"
+
+        add_to_template paginate_link_to @page_total, options if 
                           @current_page > 1
       end
 
-      def link_to_first
-        add_to_template link_to(@first_label, @base_url + "/page/#{'1'}", :class => "first") if 
+      def link_to_first(options = {})
+        options[:name] ||= "First"
+
+        add_to_template paginate_link_to @page_total, options if 
                           @current_page < @page_total
       end
 
-      def link_to_last
-        add_to_template link_to(@last_label, @base_url + "/page/#{@page_total}" , :class => "last") if 
+      def link_to_last(options = {})
+        options[:name] ||= "Last"
+        
+        add_to_template paginate_link_to @page_total, options if 
                           @current_page > 1
       end
 
-      def page_out_of_total
-        add_to_template "#{@current_page} of #{@page_total}"
+      def page_out_of_total(options = {})
+        content = "#{@current_page} of #{@page_total}"
+        add_to_template content_tag(:span,content, options)
       end
 
       private 
+        def paginate_link_to(page, args)
+          name = args[:name]
+          args[:class] ||= name.downcase
+          args[:title] ||= name.downcase
+          args.delete :name
+          link_to(name, @base_url + "/#{@slug}/#{page}" , args)
+        end
+
         def add_to_template(string)
           template = "\n\t" + string
           template.html_safe
-          string
         end
     end
 end
