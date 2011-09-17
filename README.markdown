@@ -1,4 +1,4 @@
-<h1>Paginate Me</h1>
+<h1>Paginate Me 0.0.4</h1>
 
 **Adam Rensel's Code**
 

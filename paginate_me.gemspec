@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = PaginateMe::VERSION
   s.authors     = ["Adam Rensel"]
   s.email       = ["adamrensel@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{Something}
-  s.description = %q{Its a thing}
+  s.homepage    = "https://github.com/renz45/paginate_me"
+  s.summary     = %q{paginate_me is a simple pagination gem for Rails 3.1}
+  s.description = %q{for more information, please visit the homepage or https://github.com/renz45/paginate_me for a full README}
 
   s.rubyforge_project = "paginate_me"
 
