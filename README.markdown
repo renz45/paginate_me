@@ -9,7 +9,7 @@
 <h2>Usage:</h2>
 <p>users_controller.rb</p>
 
-<pre>class UsersController < ApplicationController
+<pre>class UsersController &lt; ApplicationController
 	def index
 		@title = "All Users"
 
