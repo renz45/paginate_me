@@ -8,12 +8,11 @@ Paginate me is a Ruby Gem that adds simple pagination functionality to views.
 ### Controller Code (users_controller.rb)
 
 ```ruby
-class UsersController &lt; ApplicationController
-	def index
-		@title = "All Users"
-
-	 paginate_me :users
-	end
+class UsersController < ApplicationController
+  def index
+    @title = "All Users"
+    paginate_me :users
+  end
 end
 ```  
 
