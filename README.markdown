@@ -33,10 +33,10 @@ HTML output
 
 ```html
     <div class="paginate_me users"> 
-      <a href="/users/page/10" class="first" title="first">First</a>              
-      <a href="/users/page/10" class="next" title="next">Next</a> 
+      <a href="/users/page/1" class="first" title="first">First</a>              
+      <a href="/users/page/3" class="next" title="next">Next</a> 
       <span>2 of 10</span> 
-      <a href="/users/page/10" class="previous" title="previous">Previous</a> 
+      <a href="/users/page/1" class="previous" title="previous">Previous</a> 
       <a href="/users/page/10" class="last" title="last">Last</a> 
     </div>
 ```  
