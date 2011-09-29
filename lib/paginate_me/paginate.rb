@@ -97,66 +97,65 @@ module PaginateMe
       content = capture(paginate_builder,&@page_block)
 
       content_tag(:div,content, :class => "paginate_me #{paginate_classes}")
-    end
-    
   end
+    
   class PaginateMeBuilder
-      include ActionView::Helpers
+    include ActionView::Helpers
 
-      def initialize(options)
+    def initialize(options)
 
-        @slug = options[:slug] ||= "page"
-        @base_url = options[:base_url]
-        @per_page = options[:per_page]
-        @page_total = options[:page_total]
-        @current_page = options[:current_page]
+      @slug = options[:slug] ||= "page"
+      @base_url = options[:base_url]
+      @per_page = options[:per_page]
+      @page_total = options[:page_total]
+      @current_page = options[:current_page]
 
-        @next_page = (@current_page >= @page_total ? @current_page : @current_page + 1).to_s
-        @prev_page = (@current_page <= 1 ? @current_page : @current_page - 1).to_s   
-      end
-
-      def link_to_next(options = {})
-        options[:name] ||= "Next"
-
-        add_to_template paginate_link_to @next_page, options if @current_page < @page_total
-      end
-
-      def link_to_previous(options = {})
-        options[:name] ||= "Previous"
-
-        add_to_template paginate_link_to @prev_page, options if @current_page > 1
-      end
-
-      def link_to_first(options = {})
-        options[:name] ||= "First"
-
-        add_to_template paginate_link_to 1, options if @current_page < @page_total
-      end
-
-      def link_to_last(options = {})
-        options[:name] ||= "Last"
-        
-        add_to_template paginate_link_to @page_total, options if @current_page > 1
-      end
-
-      def page_out_of_total(options = {})
-        content = "#{@current_page} of #{@page_total}"
-        add_to_template content_tag(:span,content, options)
-      end
-
-      private 
-        def paginate_link_to(page, args)
-          name = args[:name]
-          args[:class] ||= name.downcase
-          args[:title] ||= name.downcase
-          args.delete :name
-          link_to(name, @base_url + "/#{@slug}/#{page}" , args)
-        end
-
-        def add_to_template(string)
-          template = "\n\t" + string
-          template.html_safe
-        end
+      @next_page = (@current_page >= @page_total ? @current_page : @current_page + 1).to_s
+      @prev_page = (@current_page <= 1 ? @current_page : @current_page - 1).to_s   
     end
+
+    def link_to_next(options = {})
+      options[:name] ||= "Next"
+
+      add_to_template paginate_link_to @next_page, options if @current_page < @page_total
+    end
+
+    def link_to_last(options = {})
+      options[:name] ||= "Last"
+      
+      add_to_template paginate_link_to @page_total, options if @current_page < @page_total 
+    end
+
+    def link_to_previous(options = {})
+      options[:name] ||= "Previous"
+
+      add_to_template paginate_link_to @prev_page, options if @current_page > 1
+    end
+
+    def link_to_first(options = {})
+      options[:name] ||= "First"
+
+      add_to_template paginate_link_to 1, options if @current_page > 1
+    end
+
+    def page_out_of_total(options = {})
+      content = "#{@current_page} of #{@page_total}"
+      add_to_template content_tag(:span,content, options)
+    end
+
+    private 
+      def paginate_link_to(page, args)
+        name = args[:name]
+        args[:class] ||= name.downcase
+        args[:title] ||= name.downcase
+        args.delete :name
+        link_to(name, @base_url + "/#{@slug}/#{page}" , args)
+      end
+
+      def add_to_template(string)
+        template = "\n\t" + string
+        template.html_safe
+      end
+  end
 end
 
