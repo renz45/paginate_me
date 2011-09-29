@@ -1,4 +1,4 @@
-# Paginate Me 0.0.4  
+# Paginate Me 0.0.5  
 
 **Adam Rensel's Code**  
 
@@ -14,7 +14,24 @@ class UsersController < ApplicationController
     paginate_me :users
   end
 end
-```  
+```
+### Alternate syntax for complex page requests
+```ruby
+class UsersController < ApplicationController
+  def index
+    @title = "All Users"
+    paginate_me "posts/category_to_posts/category_id/2/tag_to_posts/tag_id/6,7,8"
+  end
+end
+``` 
+The above example will paginate posts with a containing a category with id of 2 and tags with ids of 6,7,8
+
+`category_to_posts` is a many to many association table linking categories to posts, it only has category_id and post_id columns
+
+The basic syntax of the string is:
+model to paginate `/` linked table name `/` table column `/` value
+
+As long as this order is followed, as many linked tables as needed can be joined to the main model
 
 ### View code (index.haml)  
  
