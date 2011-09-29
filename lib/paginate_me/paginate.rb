@@ -1,8 +1,6 @@
 module PaginateMe
   module PMController
     def paginate_me(item, options = {})
-        model_name = item.to_s
-        model = model_name.singularize.camelize.constantize
 
         @options = options
         @options[:params_var] ||= :page 
@@ -19,9 +17,46 @@ module PaginateMe
         elsif current_page > page_total
           current_page = page_total - 1
         end
+
+        if item.is_a? String
+          # posts/category_to_posts/category_id/2/tag_to_posts/tag_id/4
+          item_arr = item.split('/') # [posts,category_to_posts,category_id,2,tag_to_posts,tag_id,4]
+
+          model_name = item_arr.shift
+          model = model_name.singularize.camelize.constantize
+
+
+          tables_arr = []
+          where_arr = []
+          count = 1
+          item_arr.each do |a|
+            case count
+              when 1
+                tables_arr << a.to_sym
+              when 2
+                col = a.to_sym
+              when 3
+                where_arr << tables[tables.length - 1] => {col => a.split(',')}
+              end
+          
+            (count % 3 ? count = 1 : count += 1)
+          end
+
+          instance_variable_set("@#{model_name}", model.includes(tables_arr).where(where_arr) )
+
+          binding.pry
+
+        elsif item.is_a? Symbol
+          model_name = item.to_s
+
+          model = model_name.singularize.camelize.constantize
+
+          instance_variable_set("@#{model_name}", 
+            model.limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]))
+        end
+
         
-        instance_variable_set("@#{model_name}", 
-          model.limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]))
+        
       end
     end
 
