@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   end
 end
 ``` 
-The above example will paginate posts with a containg a category with id of 2 and tags with ids of 6,7,8
+The above example will paginate posts with a containing a category with id of 2 and tags with ids of 6,7,8
 
 `category_to_posts` is a many to many association table linking categories to posts, it only has category_id and post_id columns
 
