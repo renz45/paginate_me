@@ -37,14 +37,18 @@ module PaginateMe
         item_arr.each do |a|
           case count
           when 1
-            tables_arr << a.to_sym
+            a.split(',').each do |tbl|
+              tables_arr << tbl.to_sym
+            end
           when 2
-            col = a.to_sym
+            col = a.to_sym unless a == "nil"
           when 3
-            table_key = tables_arr[tables_arr.length - 1]
-            obj = {}
-            obj[col] = a.split(',')
-            where_arr[table_key] = obj
+            unless a == "nil"
+              table_key = tables_arr[tables_arr.length - 1]
+              obj = {}
+              obj[col] = a.split(',')
+              where_arr[table_key] = obj
+            end
           end
           (count % 3 == 0 ? count = 1 : count += 1)
         end
