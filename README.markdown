@@ -79,6 +79,7 @@ As long as this order is followed, as many linked tables as needed can be joined
 * `page_out_of_total` – formats pagination info '1 of 10' standard rails 'content_tag' options apply  
 
 ## Additional Information  
-* If multiple pagination is needed on one page, for example at the top and bottom of the list, the block of paginate links only needs to be passed to the first 'paginate_for' The additional 'paginate_for' will use the same block, or new blocks can be passed if a different look is required  
+* If multiple pagination is needed on one page, for example at the top and bottom of the list, the block of paginate links only needs to be passed to the first 'paginate_for' The additional 'paginate_for' will use the same block, or new blocks can be passed if a different look is required
+* If passing in a string for a complex query, additional tables can be added to the includes portion of the query by adding a comma seperated list at the end of the string ex: "posts/category_to_posts/category_id/2/tag_to_posts/tag_id/6,7,8/user,vendor,genre"
 * Make sure you add the correct routes to your routes.rb. For example if your passing in :users and are using a standard resource routing setup, you will need: ` match "/users/page/:page", :to => "users#index" `  
 
