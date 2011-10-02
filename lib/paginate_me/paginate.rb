@@ -7,6 +7,7 @@ module PaginateMe
       @options[:params_var] ||= :page
       @options[:per_page] ||= 10
       @options[:current_page] = self.params[@options[:params_var]].to_i || 1
+      @options[:order] ||= "created_at ESC"
 
       current_page = @options[:current_page]
 
@@ -28,7 +29,7 @@ module PaginateMe
         @options[:base_url] ||= method("#{model_name}_path").call
         
         tables_arr = []
-        where_arr = {}
+        where_obj = {}
         col = ""
         count = 1
 
@@ -47,18 +48,21 @@ module PaginateMe
               table_key = tables_arr[tables_arr.length - 1]
               obj = {}
               obj[col] = a.split(',')
-              where_arr[table_key] = obj
+              where_obj[table_key] = obj
             end
           end
           (count % 3 == 0 ? count = 1 : count += 1)
         end
 
+        # insert the additional where object if present
+        where_obj.merge @options[:where] unless @options[:where].nil?
+
         # do the query and set it to a class variable with the pagination item name
         instance_variable_set("@#{model_name}", 
-          model.includes(tables_arr).where(where_arr).limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]) )
+          model.includes(tables_arr).where(where_obj).order(@options[:order]).limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]) )
         
         #get the total page count of the items
-        @options[:page_total] = ( model.includes(tables_arr).where(where_arr).count / @options[:per_page].to_f).ceil
+        @options[:page_total] = ( model.includes(tables_arr).where(where_obj).count / @options[:per_page].to_f).ceil
         page_total = @options[:page_total]
 
       elsif item.is_a? Symbol
@@ -67,11 +71,22 @@ module PaginateMe
         model = model_name.singularize.camelize.constantize
 
         @options[:base_url] ||= method("#{model_name}_path").call
-        @options[:page_total] = (model.count / @options[:per_page].to_f).ceil
+
+        if @options[:where].nil?
+          instance_variable_set("@#{model_name}", 
+          model.order(@options[:order]).limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]))
+         
+          @options[:page_total] = (model.count / @options[:per_page].to_f).ceil
+        else
+
+          instance_variable_set("@#{model_name}", 
+          model.where(options[:where]).order(@options[:order]).limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]))
+
+          @options[:page_total] = (model.where(options[:where]).count / @options[:per_page].to_f).ceil
+        end
         page_total = @options[:page_total]
 
-        instance_variable_set("@#{model_name}", 
-          model.limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]))
+        
       end
       # set bounds for the current page, this makes sure the current_page variable stays within
       # the max and min number of items
