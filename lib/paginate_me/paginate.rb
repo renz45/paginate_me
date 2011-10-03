@@ -1,24 +1,24 @@
 module PaginateMe
   module PMController
     def paginate_me(item, options = {})
-
+      # TODO this entire method needs to be cleaned up
       #set generic param defaults
       @options = options
       @options[:params_var] ||= :page
       @options[:per_page] ||= 10
       @options[:current_page] = self.params[@options[:params_var]].to_i || 1
-      @options[:order] ||= "created_at ESC"
+      @options[:order] ||= "created_at ASC"
 
-      current_page = @options[:current_page]
-
+      current_page = @options[:current_page] <= 0 ? 1 : @options[:current_page]
+      
       if item.is_a? String
         # a string can be passed in with the format below to customize pagination returns
         # posts/category_to_posts/category_id/2/tag_to_posts/tag_id/4,3,2
         # pagination item / optional table to join / colummn to join / value for where clause
         # the above string finds all posts with category id of 2 and tag id 4,3,2
         # category_to_posts is the association table containing post_id category_id
-
-        # split the string into an array
+        # TODO This feature might be better in an includes option?
+        # split the string into an array 
         item_arr = item.split('/') # [posts,category_to_posts,category_id,2,tag_to_posts,tag_id,4]
 
         # the name of the model being paginated is assumed to be the first item, shift it out of the array
@@ -58,11 +58,15 @@ module PaginateMe
         where_obj.merge @options[:where] unless @options[:where].nil?
 
         # do the query and set it to a class variable with the pagination item name
-        instance_variable_set("@#{model_name}", 
-          model.includes(tables_arr).where(where_obj).order(@options[:order]).limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]) )
+        instance_variable_set("@#{model_name}",model
+                                                .includes(tables_arr)
+                                                .where(where_obj)
+                                                .order(@options[:order])
+                                                .limit(@options[:per_page])
+                                                .offset(current_page - 1) )
         
         #get the total page count of the items
-        @options[:page_total] = ( model.includes(tables_arr).where(where_obj).count / @options[:per_page].to_f).ceil
+        @options[:page_total] = (model.includes(tables_arr).where(where_obj).count / @options[:per_page].to_f).ceil
         page_total = @options[:page_total]
 
       elsif item.is_a? Symbol
@@ -74,13 +78,16 @@ module PaginateMe
 
         if @options[:where].nil?
           instance_variable_set("@#{model_name}", 
-          model.order(@options[:order]).limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]))
-         
+          model
+            .order(@options[:order])
+            .limit(@options[:per_page])
+            .offset(current_page-1))
+          
           @options[:page_total] = (model.count / @options[:per_page].to_f).ceil
         else
 
           instance_variable_set("@#{model_name}", 
-          model.where(options[:where]).order(@options[:order]).limit(@options[:per_page]).offset((current_page-1) * @options[:per_page]))
+          model.where(options[:where]).order(@options[:order]).limit(@options[:per_page]).offset(current_page-1))
 
           @options[:page_total] = (model.where(options[:where]).count / @options[:per_page].to_f).ceil
         end
