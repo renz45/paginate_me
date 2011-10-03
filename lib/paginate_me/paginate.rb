@@ -7,100 +7,31 @@ module PaginateMe
       @options[:params_var] ||= :page
       @options[:per_page] ||= 10
       @options[:current_page] = self.params[@options[:params_var]].to_i || 1
-      @options[:order] ||= "created_at ASC"
+      @options[:order] ||= "#{item.to_s}.created_at ASC"
 
       current_page = @options[:current_page] <= 0 ? 1 : @options[:current_page]
       
-      if item.is_a? String
-        # a string can be passed in with the format below to customize pagination returns
-        # posts/category_to_posts/category_id/2/tag_to_posts/tag_id/4,3,2
-        # pagination item / optional table to join / colummn to join / value for where clause
-        # the above string finds all posts with category id of 2 and tag id 4,3,2
-        # category_to_posts is the association table containing post_id category_id
-        # TODO This feature might be better in an includes option?
-        # split the string into an array 
-        item_arr = item.split('/') # [posts,category_to_posts,category_id,2,tag_to_posts,tag_id,4]
+      model_name = item.to_s
+      model = model_name.singularize.camelize.constantize
 
-        # the name of the model being paginated is assumed to be the first item, shift it out of the array
-        model_name = item_arr.shift
-        model = model_name.singularize.camelize.constantize
+      @options[:base_url] ||= method("#{model_name}_path").call
 
-        # user the model name extracted from the string to call an assumed routing path method
-        @options[:base_url] ||= method("#{model_name}_path").call
-        
-        tables_arr = []
-        where_obj = {}
-        col = ""
-        count = 1
+      instance_variable_set("@#{model_name}", 
+      model
+        .includes(@options[:includes])
+        .where(@options[:where])
+        .order(@options[:order])
+        .limit(@options[:per_page])
+        .offset((current_page-1) * @options[:per_page]) )
+      
+      @options[:page_total] = (model.includes(@options[:includes]).where(@options[:where]).count / @options[:per_page].to_f).ceil
 
-        # loop through the remaining items from the string and build an active record query structure
-        # that allows for joins and where clauses
-        item_arr.each do |a|
-          case count
-          when 1
-            a.split(',').each do |tbl|
-              tables_arr << tbl.to_sym
-            end
-          when 2
-            col = a.to_sym unless a == "nil"
-          when 3
-            unless a == "nil"
-              table_key = tables_arr[tables_arr.length - 1]
-              obj = {}
-              obj[col] = a.split(',')
-              where_obj[table_key] = obj
-            end
-          end
-          (count % 3 == 0 ? count = 1 : count += 1)
-        end
-
-        # insert the additional where object if present
-        where_obj.merge @options[:where] unless @options[:where].nil?
-
-        # do the query and set it to a class variable with the pagination item name
-        instance_variable_set("@#{model_name}",model
-                                                .includes(tables_arr)
-                                                .where(where_obj)
-                                                .order(@options[:order])
-                                                .limit(@options[:per_page])
-                                                .offset(current_page - 1) )
-        
-        #get the total page count of the items
-        @options[:page_total] = (model.includes(tables_arr).where(where_obj).count / @options[:per_page].to_f).ceil
-        page_total = @options[:page_total]
-
-      elsif item.is_a? Symbol
-
-        model_name = item.to_s
-        model = model_name.singularize.camelize.constantize
-
-        @options[:base_url] ||= method("#{model_name}_path").call
-
-        if @options[:where].nil?
-          instance_variable_set("@#{model_name}", 
-          model
-            .order(@options[:order])
-            .limit(@options[:per_page])
-            .offset(current_page-1))
-          
-          @options[:page_total] = (model.count / @options[:per_page].to_f).ceil
-        else
-
-          instance_variable_set("@#{model_name}", 
-          model.where(options[:where]).order(@options[:order]).limit(@options[:per_page]).offset(current_page-1))
-
-          @options[:page_total] = (model.where(options[:where]).count / @options[:per_page].to_f).ceil
-        end
-        page_total = @options[:page_total]
-
-        
-      end
       # set bounds for the current page, this makes sure the current_page variable stays within
       # the max and min number of items
       if @options[:current_page] <= 0
         @options[:current_page] = 1
-      elsif @options[:current_page] > page_total
-        @options[:current_page] = page_total - 1
+      elsif @options[:current_page] > @options[:page_total]
+        @options[:current_page] = @options[:page_total] - 1
       end
     end
   end
