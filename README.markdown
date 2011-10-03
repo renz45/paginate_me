@@ -15,23 +15,6 @@ class UsersController < ApplicationController
   end
 end
 ```
-### Alternate syntax for complex page requests
-```ruby
-class UsersController < ApplicationController
-  def index
-    @title = "All Users"
-    paginate_me "posts/category_to_posts/category_id/2/tag_to_posts/tag_id/6,7,8"
-  end
-end
-``` 
-The above example will paginate posts with a containing a category with id of 2 and tags with ids of 6,7,8
-
-`category_to_posts` is a many to many association table linking categories to posts, it only has category_id and post_id columns
-
-The basic syntax of the string is:
-model to paginate `/` linked table name `/` table column `/` value
-
-As long as this order is followed, as many linked tables as needed can be joined to the main model
 
 ### View code (index.haml)  
  
@@ -59,6 +42,7 @@ As long as this order is followed, as many linked tables as needed can be joined
 * `:per_page` – results per page, defaults to 10  
 * `:params_var` – variable set in routes that will hold the current page number ex: ` match "/users/page/:page", :to => "users#index" ` :page is the :params_var , defaults to :page  
 * `:where` - Sets a where clause in the query, accepts a normal active record where object ex: `{comments: {post_id: 2}}`
+* `:includes` - sets the include clause in the query, uses standard active record syntax
 * `:order` - changes the order for the query, accepts the same string as an active record query ex: `"created_at DESC"`
 
 
@@ -82,6 +66,5 @@ As long as this order is followed, as many linked tables as needed can be joined
 
 ## Additional Information  
 * If multiple pagination is needed on one page, for example at the top and bottom of the list, the block of paginate links only needs to be passed to the first 'paginate_for' The additional 'paginate_for' will use the same block, or new blocks can be passed if a different look is required
-* If passing in a string for a complex query, additional tables can be added to the includes portion of the query by adding a comma seperated list at the end of the string ex: "posts/category_to_posts/category_id/2/tag_to_posts/tag_id/6,7,8/user,vendor,genre"
 * Make sure you add the correct routes to your routes.rb. For example if your passing in :users and are using a standard resource routing setup, you will need: ` match "/users/page/:page", :to => "users#index" `  
 
