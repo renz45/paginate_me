@@ -38,7 +38,7 @@ end
     </div>
 ```  
 ## Options for paginate_me(item, options ={})  
-* `:url` – The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)  
+* `:base_url` – The plugin builds it's base path from the item passed in according to standard rails routing resource format. A different base url can be passed in instead. /users/page/:page_number (/users is the base_url)  
 * `:per_page` – results per page, defaults to 10  
 * `:params_var` – variable set in routes that will hold the current page number ex: ` match "/users/page/:page", :to => "users#index" ` :page is the :params_var , defaults to :page  
 * `:where` - Sets a where clause in the query, accepts a normal active record where object ex: `{comments: {post_id: 2}}`
